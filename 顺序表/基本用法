@@ -1,1 +1,145 @@
+seqlist.h：
 
+#pragma once
+#include<stdio.h>
+#include<stdlib.h>
+#include<assert.h>
+typedef int sldatatype;
+typedef struct seqlist
+{
+	sldatatype* arr;
+	int len;
+	int capacity;
+}SL;
+void seqInit(SL* sl);
+void seqDestory(SL* sl);
+void seqpushback(SL* sl, sldatatype data);
+void seqpushfront(SL* sl,sldatatype data);
+void seqcheck(SL* sl);
+void seqprint(SL* sl);
+void seqinsert(SL* sl, int index, sldatatype data);
+void seqdelete(SL* sl, int index);
+void seqgetlen(SL* sl,sldatatype* data);
+
+seqlist.c
+
+#include"seqlist.h"
+void seqInit(SL* sl)
+{
+	sl->arr = NULL;
+	sl->len =sl->capacity = 0;
+}
+void seqDestory(SL* sl)
+{
+	if (sl->arr)
+	free(sl->arr);
+	sl->arr = NULL;
+	sl->len = sl->capacity = 0;
+}
+void seqprint(SL* sl)
+{
+	for (int i = 0;i < sl->len;i++)
+	{
+		printf("%d ", sl->arr[i]);
+	}
+	printf("\n");
+}
+void seqcheck(SL* sl)
+{
+	if (sl->len == sl->capacity)
+	{
+		int newcapacity = sl->capacity==0 ? 4:2*sl->capacity;
+		sldatatype* pr = (sldatatype*)realloc(sl->arr, newcapacity * sizeof(sldatatype));
+		if (pr==NULL)
+		{
+			perror("realloc fail!");
+			exit (1);
+		}
+		sl->capacity = newcapacity;
+		sl->arr = pr;
+	}
+}
+void seqpushback(SL* sl, sldatatype data)
+{
+	assert(sl);
+	seqcheck(sl);
+	sl->arr[sl->len] = data;
+	sl->len++;
+}
+void seqpushfront(SL* sl, sldatatype data)
+{
+	assert(sl);
+	seqcheck(sl);
+	for (int i = (sl->len)-1;i > 0;i--)
+	{
+		sl->arr[i+1] = sl->arr[i];
+	}
+	sl->arr[0] = data;
+	sl->len++;
+}
+void seqInsert(SL* sl, int index, sldatatype data)
+{
+	assert(sl);
+	assert(index>=0 && index<=sl->len);
+	seqcheck(sl);
+	for (int i = sl->len - 1;i>=index;i--)
+	{
+		sl->arr[i + 1] = sl->arr[i];
+	}
+	sl->arr[index] = data;
+	sl->len++;
+}
+void seqDelete(SL* sl, int index)
+{
+	assert(sl);
+	assert(index >= 0 && index < sl->len);
+		for (int i = index;i < sl->len - 1;i++)
+		{
+			sl->arr[i] = sl->arr[i + 1];
+		}
+		sl->len--;
+}
+void seqgetlen(SL* sl,sldatatype* data)
+{
+	assert(sl);
+	for (int i = 0;i < sl->len;i++)
+	{
+		if (sl->arr[i] == data)
+		{
+			printf("找到了，所在位置数组下标为%d\n", i);
+			return;
+		}
+	}
+	printf("没有找到\n");
+}
+
+test.c
+#define _CRT_SECURE_NO_WARNINGS
+#include"seqlist.h"
+void test()
+{
+	SL sl;
+	seqInit(&sl);
+	seqpushback(&sl, 1);
+	seqpushback(&sl, 1);
+	seqpushback(&sl, 2);
+	seqpushback(&sl, 3);
+	seqprint(&sl);
+	seqpushfront(&sl, 4);
+	seqprint(&sl);
+	seqInsert(&sl, 2, 5);
+	seqprint(&sl);
+	seqDelete(&sl, 2);
+	seqprint(&sl);
+	seqgetlen(&sl, 2);
+	seqDestory(&sl); 
+}
+int main()
+{
+	test();
+	return 0;
+}
+//整体流程
+//初始化 销毁 打印 尾部插入 头部插入 尾部删除 头部删除 
+//指定位置插入数据 指定位置删除数据 查找某个数在顺序表中的位置
+//最好写完一个模块就进行测试
