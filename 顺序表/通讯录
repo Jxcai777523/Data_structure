@@ -1,1 +1,36 @@
+contact.h
+#pragma once
+#include<stdio.h>
+#include<stdlib.h>
+#define NAME_max 20
+#define SEX_max 10 //male female
+#define TEL_max 20
+#define Addr_max 100
+typedef struct personinfo
+{
+	char name[NAME_max];
+	char sex[SEX_max];
+	int age;
+	char tel[TEL_max];
+	char addr[Addr_max];
+}perinfo;
+//姓名 性别 年龄 电话 住址
+//通讯录其实就是将顺序表中的数据类型修改为一个具体的联系人信息结构体
+//其他结构不会发生改变
+typedef perinfo sldatatype;
+typedef struct seqlist   //这里是对顺序表结构的创建
+{
+	sldatatype* conf;
+	int len;
+	int capacity;
+}SL;
+typedef SL Contact;//其实可以在上一步就直接修改，这里只是为了方便理解
+//通讯录的初始化 销毁 添加 删除 修改 查找 展示
+void InitContact(Contact* con);
+void DestroyContact(Contact* con);
+void AddContact(Contact* con);
+void DelContact(Contact* con);
+void ModContact(Contact* con);
+void FindContact(Contact* con);
+void ShowContact(Contact* con);
 
