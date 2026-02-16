@@ -1,1 +1,59 @@
-
+https://leetcode.cn/problems/remove-linked-list-elements/
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     struct ListNode *next;
+ * };
+ */
+ typedef struct ListNode ListNode;
+struct ListNode* removeElements(struct ListNode* head, int val)
+{
+    ListNode* newhead,* newtail;
+    newhead=newtail=NULL;
+    ListNode* pcur=head;
+    while(pcur)
+    {
+        if(pcur->val!=val)
+        {
+           if(newhead==NULL)
+           {
+            newhead=newtail=pcur;
+           }
+           else
+           {
+            newtail->next=pcur;
+            newtail=newtail->next;
+           }
+        }
+        pcur=pcur->next;
+    }
+    if(newtail)
+    newtail->next=NULL;
+    return newhead;
+}
+https://leetcode.cn/problems/reverse-linked-list/
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     struct ListNode *next;
+ * };
+ */
+ typedef struct ListNode ListNode;
+struct ListNode* reverseList(struct ListNode* head) 
+{
+    ListNode* n1,*n2,*n3;
+    if(head==NULL)
+    return head;
+    n1=NULL,n2=head,n3=head->next;
+    while(n2)
+    {
+        n2->next=n1;
+        n1=n2;
+        n2=n3;
+        if(n3)
+        n3=n3->next;
+    }
+    return n1;
+}
