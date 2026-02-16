@@ -57,3 +57,88 @@ struct ListNode* reverseList(struct ListNode* head)
     }
     return n1;
 }
+https://leetcode.cn/problems/middle-of-the-linked-list/
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     struct ListNode *next;
+ * };
+ */
+ typedef struct ListNode ListNode;
+struct ListNode* middleNode(struct ListNode* head) 
+{
+    /*int count=0;
+    if(head==NULL)
+    return head;
+    ListNode* pcur=head;
+    while(pcur)
+    {
+        pcur=pcur->next;
+        count++;
+    }
+    pcur=head;
+    for(int i=0;i<count/2;i++)
+    {
+        pcur=pcur->next;
+    }
+    return pcur;
+    */
+    ListNode* slow,*fast;
+    slow=fast=head;
+    while(fast&&fast->next)
+    {
+        fast=fast->next->next;
+        slow=slow->next;
+    }
+    return slow;
+}
+https://leetcode.cn/problems/merge-two-sorted-lists/
+合并两个有序链表
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     struct ListNode *next;
+ * };
+ */
+typedef struct ListNode ListNode;
+
+struct ListNode* mergeTwoLists(struct ListNode* list1, struct ListNode* list2) {
+    ListNode* l1 = list1;
+    ListNode* l2 = list2;
+    ListNode* newhead = NULL;
+    ListNode* newtail = NULL;
+
+    // 处理空链表情况
+    if (l1 == NULL) return l2;
+    if (l2 == NULL) return l1;
+
+    if (l1->val < l2->val) 
+    {
+        newhead = newtail = l1;
+        l1 = l1->next;
+    } else 
+    {
+        newhead = newtail = l2;
+        l2 = l2->next;
+    }
+
+    // 主循环：比较并链接节点
+    while (l1 && l2) 
+    {
+        if (l1->val < l2->val) 
+        {
+            newtail->next = l1;   // 将 l1 节点挂到尾部
+            l1 = l1->next;         // l1 后移
+        } else 
+        {
+            newtail->next = l2;    // 将 l2 节点挂到尾部
+            l2 = l2->next;          // l2 后移
+        }
+        newtail = newtail->next;   // newtail 移动到新节点
+    }
+    if (l1) newtail->next = l1;
+    if (l2) newtail->next = l2;
+    return newhead;
+}
