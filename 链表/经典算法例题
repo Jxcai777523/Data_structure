@@ -139,3 +139,89 @@ struct ListNode* mergeTwoLists(struct ListNode* list1, struct ListNode* list2) {
     if (l2) newtail->next = l2;
     return newhead;
 }
+https://www.nowcoder.com/practice/41c399fdb6004b31a6cbb047c641ed8a
+环形链表的约瑟夫问题
+
+typedef struct ListNode ListNode;
+ListNode* buynode(int num)
+{
+    ListNode* node=(ListNode*)malloc(sizeof(ListNode));
+    if(node==NULL)
+    {
+        exit(1);
+    }
+    node->val=num;
+    node->next=NULL;
+    return node;
+}
+ListNode* CreatecirList(int n)
+{
+    ListNode* head=buynode(1);
+    ListNode* ptail=head;
+    for(int i=2;i<=n;i++)
+    {
+        ptail->next=buynode(i);
+        ptail=ptail->next;
+    }
+    ptail->next=head;
+    return ptail;
+}
+int ysf(int n, int m) 
+{
+    ListNode* prev=CreatecirList(n);
+    ListNode* pcur=prev->next;
+    int count=1;
+    while(pcur->next!=pcur)
+    {
+        if(count==m)
+        {
+            prev->next=pcur->next;
+            free(pcur);
+            pcur=prev->next;
+            count=1;
+        }
+        else 
+        {
+            pcur=pcur->next;
+            prev=prev->next;
+            count++;
+        }    
+    }
+    return pcur->val;
+}
+
+https://leetcode.cn/problems/partition-list-lcci/
+分割链表问题
+typedef struct ListNode ListNode;
+struct ListNode* partition(struct ListNode* head, int x) 
+{
+    if(head==NULL)
+    {
+        return NULL;
+    }
+   ListNode* lesshead,* lesstail;
+   ListNode* greathead,* greattail;
+   lesshead=lesstail=(ListNode*)malloc(sizeof(ListNode));
+   greathead=greattail=(ListNode*)malloc(sizeof(ListNode));
+   ListNode* pcur=head;
+   while(pcur)
+   {
+    if((pcur->val)<x)
+    {
+        lesstail->next=pcur;
+        lesstail=lesstail->next;
+    }
+    else 
+    {
+        greattail->next=pcur;
+        greattail=greattail->next;
+    }
+    pcur=pcur->next;
+   }
+   greattail->next=NULL;
+   lesstail->next=greathead->next;
+   ListNode* ret=lesshead->next;
+   free(lesshead);
+   free(greathead);
+   return ret;
+}
