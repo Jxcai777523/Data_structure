@@ -1,3 +1,4 @@
+移除链表中指定数据的元素
 https://leetcode.cn/problems/remove-linked-list-elements/
 /**
  * Definition for singly-linked list.
@@ -9,29 +10,26 @@ https://leetcode.cn/problems/remove-linked-list-elements/
  typedef struct ListNode ListNode;
 struct ListNode* removeElements(struct ListNode* head, int val)
 {
+    if(head==NULL)
+    {
+        return NULL;
+    }
     ListNode* newhead,* newtail;
-    newhead=newtail=NULL;
+    newhead=newtail=(ListNode*)malloc(sizeof(ListNode));
     ListNode* pcur=head;
     while(pcur)
     {
         if(pcur->val!=val)
         {
-           if(newhead==NULL)
-           {
-            newhead=newtail=pcur;
-           }
-           else
-           {
             newtail->next=pcur;
             newtail=newtail->next;
-           }
         }
         pcur=pcur->next;
     }
-    if(newtail)
     newtail->next=NULL;
-    return newhead;
+    return newhead->next;
 }
+反转链表
 https://leetcode.cn/problems/reverse-linked-list/
 /**
  * Definition for singly-linked list.
@@ -57,6 +55,7 @@ struct ListNode* reverseList(struct ListNode* head)
     }
     return n1;
 }
+链表的中间节点
 https://leetcode.cn/problems/middle-of-the-linked-list/
 /**
  * Definition for singly-linked list.
@@ -103,7 +102,6 @@ https://leetcode.cn/problems/merge-two-sorted-lists/
  * };
  */
 typedef struct ListNode ListNode;
-
 struct ListNode* mergeTwoLists(struct ListNode* list1, struct ListNode* list2) {
     ListNode* l1 = list1;
     ListNode* l2 = list2;
@@ -123,7 +121,6 @@ struct ListNode* mergeTwoLists(struct ListNode* list1, struct ListNode* list2) {
         newhead = newtail = l2;
         l2 = l2->next;
     }
-
     // 主循环：比较并链接节点
     while (l1 && l2) 
     {
