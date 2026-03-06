@@ -1,1 +1,135 @@
+题目详细情况见博客链表经典问题详解或比特C++作业中空间复杂度
 
+https://leetcode.cn/problems/palindrome-linked-list/
+
+判断链表的回文结构
+typedef struct ListNode Listnode;
+//找到中间节点
+Listnode* get_middlenode(Listnode* head)
+{
+    Listnode* fast=head,* slow=head;
+    while(fast&&fast->next)
+    {
+        fast=fast->next->next;
+        slow=slow->next;
+    }
+    return slow;
+}
+//翻转
+Listnode* reverse(Listnode* middlenode)
+{
+    Listnode* prev = NULL;
+    Listnode* curr = middlenode;
+    while (curr) {
+        Listnode* next = curr->next;
+        curr->next = prev;
+        prev = curr;
+        curr = next;
+    }
+    return prev;
+}
+bool isPalindrome(struct ListNode* head) 
+{
+    if(head==NULL)
+    return NULL;
+    Listnode* reversehead=reverse(get_middlenode(head));
+    Listnode* p1=head,* p2=reversehead;
+    while(p1&&p2)
+    {
+        if(p1->val!=p2->val)
+        {
+            return false;
+        }
+        p1=p1->next;
+        p2=p2->next;
+    }
+    return true;
+}
+
+找出相交链表的第一个交点
+https://leetcode.cn/problems/intersection-of-two-linked-lists/
+typedef struct ListNode Listnode; 
+struct ListNode *getIntersectionNode(struct ListNode *headA, struct ListNode *headB) 
+{
+    Listnode* pcur1=headA,* pcur2=headB;
+    int count1=0,count2=0;
+    while(pcur1->next)
+    {
+        pcur1=pcur1->next;
+        count1++;
+    }
+    while(pcur2->next)
+    {
+        pcur2=pcur2->next;
+        count2++;
+    }
+   if(pcur1!=pcur2)
+   {
+    return NULL;
+   }
+   int gap=abs(count1-count2);
+   Listnode* longlist=headA,* shortlist=headB;
+   if(count2>count1)
+   {
+    longlist=headB;
+    shortlist=headA;
+   }
+   while(gap--)
+    {
+        longlist=longlist->next;
+    }
+    while(longlist!=shortlist)
+    {
+        longlist=longlist->next;
+        shortlist=shortlist->next;
+    }
+    return longlist;
+}
+
+判断链表中是否有环 
+https://leetcode.cn/problems/linked-list-cycle/
+
+typedef struct ListNode listnode;
+bool hasCycle(struct ListNode *head) 
+{
+    listnode* fast=head,* slow=head;
+    while(fast&&fast->next)
+    {
+        fast=fast->next->next;
+        slow=slow->next;
+        if(fast==slow)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+返回链表入环的第一个节点
+https://leetcode.cn/problems/linked-list-cycle-ii/
+
+typedef struct ListNode Listnode;
+struct ListNode *detectCycle(struct ListNode *head) 
+{
+   Listnode* fast=head,* slow=head;
+   Listnode* meet=NULL;
+   while(fast&&fast->next)
+   {
+    fast=fast->next->next;
+    slow=slow->next;
+    if(fast==slow)
+    {
+        meet=fast;
+        fast=NULL;
+    }
+   }
+   if(meet==NULL)
+   return NULL;
+   Listnode* pcur=head;
+   while(pcur!=meet)
+   {
+    meet=meet->next;
+    pcur=pcur->next;
+   }
+   return meet;
+}
