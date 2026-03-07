@@ -133,3 +133,62 @@ struct ListNode *detectCycle(struct ListNode *head)
    }
    return meet;
 }
+
+复制复杂链表
+https://leetcode.cn/problems/copy-list-with-random-pointer/
+
+typedef struct Node Listnode;
+Listnode* buycopynode(int x)
+{
+    Listnode* copynode=(Listnode*)malloc(sizeof(Listnode));
+    copynode->val=x;
+    copynode->next=copynode->random=NULL;
+    return copynode;
+}
+struct Node* copyRandomList(struct Node* head) 
+{
+    if(head==NULL)
+    return NULL;
+	Listnode* pcur=head;
+    while(pcur)
+    {
+        Listnode* copynode=buycopynode(pcur->val);
+        copynode->next=pcur->next;
+        pcur->next=copynode;
+        pcur=copynode->next;
+    }
+    pcur=head;
+    while(pcur)
+    {
+        if(pcur->random==NULL)
+        {
+            pcur->next->random=NULL;
+            pcur=pcur->next->next;
+        }
+        else
+        {
+            pcur->next->random=pcur->random->next;
+            pcur=pcur->next->next;
+        }
+    }
+    Listnode* newhead=NULL,* newtail=NULL;
+    pcur=head;
+    while(pcur)
+    {
+        Listnode* copy=pcur->next;
+        Listnode* listnext=copy->next;
+        if(newhead==NULL) 
+       {
+        newhead=copy;
+        newtail=copy;
+       }
+       else
+       {
+        newtail->next=copy;
+        newtail=newtail->next;
+       }
+        pcur->next=listnext;
+        pcur=listnext;
+    }
+    return newhead;
+}
