@@ -144,3 +144,170 @@ void myQueueFree(MyQueue* obj)
     StackDestroy(obj->pushstack);
     free(obj);
 }
+
+https://leetcode.cn/problems/implement-stack-using-queues/submissions/705631428/
+
+队列实现栈
+#include<stdio.h>
+#include<stdlib.h>
+#include<assert.h>
+#include<stdbool.h>
+typedef int QListdataType;
+typedef struct QListNode   //这里是队列的节点结构
+{
+	struct QListNode* next;
+	QListdataType data;
+}Qnode;
+//这里是队列的结构,这里是为了方便后面的操作,所以使用了结构体
+//包含了队列的头指针,尾指针,队列的大小
+//否则我们需要多次遍历操作才能实现队列
+typedef struct Queue
+{
+	Qnode* phead;
+	Qnode* ptail;
+	int size;
+}Que;
+//队列的初始化以及销毁函数
+void QueInit(Que* pq);
+void QueDestroy(Que* pq);
+//队列的入队操作
+void Quepush(Que* pq, QListdataType data);
+//队列的出队操作
+void Quepop(Que* pq);
+//队列的判空操作
+bool QueEmpty(Que* pq);
+//队列的长度
+int QueSize(Que* pq);
+QListdataType S(Que* pq);//队头
+QListdataType Queback(Que* pq);//队尾
+void QueInit(Que* pq)
+{
+	assert(pq != NULL);
+	pq->phead = pq->ptail = NULL;
+	pq->size = 0;
+}
+bool QueEmpty(Que* pq)
+{
+	return pq->size == 0;
+}
+void QueDestroy(Que* pq)
+{
+	assert(pq != NULL);
+	Qnode* pcur =pq->phead;
+	while (pcur)
+	{
+		Qnode* next = pcur->next;
+		free(pcur);
+		pcur = next;
+	}
+	pq->size = 0;
+	pq->phead = pq->ptail = NULL;
+}
+void Quepush(Que* pq, QListdataType data)
+{
+	assert(pq!=NULL);
+	Qnode* newnode = (Qnode*)malloc(sizeof(Qnode));
+	if (newnode == NULL)
+	{
+		perror("malloc failed");
+		return;
+	}
+	newnode->data = data;
+	newnode->next = NULL;
+	if (pq->size==0)//如果一个节点都没有，就需要对头节点也进行更新
+		pq->phead = pq->ptail = newnode;
+	else
+	{
+		pq->ptail->next = newnode;
+		pq->ptail = newnode;
+	}
+	pq->size++;
+}
+void Quepop(Que* pq)
+{
+	//这里要保证队列中至少要有一个节点
+	assert(pq != NULL&&pq->phead!=NULL);
+	if (pq->size == 1)//如果只有一个节点
+	{
+		free(pq->phead);
+		pq->phead = pq->ptail = NULL;
+		pq->size = 0;
+		return;
+	}
+	Qnode* next = pq->phead->next;
+	free(pq->phead);
+	pq->phead = next;
+	pq->size--;
+}
+int QueSize(Que* pq)
+{
+	return pq->size;
+}
+QListdataType Quefront(Que* pq)
+{
+	assert(pq != NULL && pq->size != 0);
+	return pq->phead->data;
+}
+QListdataType Queback(Que* pq)
+{
+	assert(pq != NULL && pq->size != 0);
+	return pq->ptail->data;
+}
+typedef struct 
+{
+    Que* que1;
+    Que* que2;
+} MyStack;
+MyStack* myStackCreate() 
+{
+    MyStack* obj=(MyStack*)malloc(sizeof(MyStack));
+    obj->que1 = malloc(sizeof(Que));
+    obj->que2 = malloc(sizeof(Que));
+    QueInit(obj->que1);
+    QueInit(obj->que2);
+    return obj;
+}
+void myStackPush(MyStack* obj, int x) 
+{
+    if(!QueEmpty(obj->que1))//将数据插入不为空的队列
+    {
+        Quepush(obj->que1,x);
+    }
+    else
+    {
+         Quepush(obj->que2,x);
+    }
+}
+
+int myStackPop(MyStack* obj) 
+{
+    Que* emptyque=obj->que1;
+    Que* unemptyque=obj->que2;
+    if(QueEmpty(obj->que2))
+    {
+        emptyque=obj->que2;
+        unemptyque=obj->que1;
+    }
+    while(unemptyque->size>1)
+    {
+        Quepush(emptyque,unemptyque->phead->data);
+        Quepop(unemptyque);
+    }
+    int ret=unemptyque->phead->data;
+    Quepop(unemptyque);
+    return ret;
+}
+int myStackTop(MyStack* obj) 
+{
+    return QueEmpty(obj->que1)==true?Queback(obj->que2):Queback(obj->que1);
+}
+bool myStackEmpty(MyStack* obj) 
+{
+    return QueEmpty(obj->que1)&&QueEmpty(obj->que2);
+}
+void myStackFree(MyStack* obj) 
+{
+    QueDestroy(obj->que1);
+    QueDestroy(obj->que2);
+    free(obj);
+}
