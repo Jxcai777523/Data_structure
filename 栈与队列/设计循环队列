@@ -1,0 +1,71 @@
+https://leetcode.cn/problems/design-circular-queue/submissions/705632277/
+
+typedef struct 
+{
+    int* arr;
+    int head;
+    int tail;
+    int k;
+} MyCircularQueue;
+
+
+MyCircularQueue* myCircularQueueCreate(int k) 
+{
+    MyCircularQueue* obj=( MyCircularQueue*)malloc(sizeof(MyCircularQueue));
+    obj->arr=(int*)malloc(sizeof(int)*(k+1));
+    obj->head=obj->tail=0;
+    obj->k=k;
+    return obj;
+}
+bool myCircularQueueIsFull(MyCircularQueue* obj);
+bool myCircularQueueEnQueue(MyCircularQueue* obj, int value) //插入数据
+{
+    if(myCircularQueueIsFull(obj))//如果满了
+    return false;
+    else
+   { 
+    obj->arr[obj->tail]=value;
+    obj->tail++;
+    obj->tail%=(obj->k+1);
+    return true;
+   }
+}
+bool myCircularQueueDeQueue(MyCircularQueue* obj) //删除数据
+{
+    if(obj->head==obj->tail)//如果循环链表为空
+    return false;
+    obj->head=(obj->head+1)%(obj->k+1);//这里对head也需要取模
+    return true;
+}
+
+int myCircularQueueFront(MyCircularQueue* obj) 
+{
+    if(obj->head==obj->tail)//如果循环链表为空
+    return -1;
+    else
+    return obj->arr[obj->head];
+}
+
+int myCircularQueueRear(MyCircularQueue* obj) 
+{
+     if(obj->head==obj->tail)//如果循环链表为空
+    return -1;
+    else
+    return obj->arr[(obj->tail-1+obj->k+1)%(obj->k+1)];
+}
+
+bool myCircularQueueIsEmpty(MyCircularQueue* obj) 
+{
+    return obj->head==obj->tail;
+}
+
+bool myCircularQueueIsFull(MyCircularQueue* obj) 
+{
+    return (obj->tail+1)%(obj->k+1)==obj->head;
+}
+
+void myCircularQueueFree(MyCircularQueue* obj) 
+{
+    free(obj->arr);
+    free(obj);
+}
