@@ -1,0 +1,141 @@
+单值二叉树，判断是否所有节点的数据相等
+
+https://leetcode.cn/problems/univalued-binary-tree/
+
+bool _isUnivalTree(struct TreeNode* root,int val)
+ {
+    if(root==NULL)
+    return true;
+    if(root->val!=val)
+    return false;
+    return _isUnivalTree(root->left,val) && _isUnivalTree(root->right,val);
+ }
+bool isUnivalTree(struct TreeNode* root) 
+{
+    return _isUnivalTree(root,root->val);
+}
+
+判断两个树是否相同
+https://leetcode.cn/problems/same-tree/
+
+bool isSameTree(struct TreeNode* p, struct TreeNode* q) 
+{
+    if(p==NULL&&q==NULL)
+    return true;
+
+    if(p==NULL||q==NULL)
+    return false;
+
+    if(p->val!=q->val)
+    return false;
+
+    return isSameTree(p->left,q->left)&&isSameTree(p->right,q->right);
+}
+
+判断二叉树是否对称
+https://leetcode.cn/problems/symmetric-tree/
+
+bool isSameTree(struct TreeNode* p, struct TreeNode* q) 
+{
+    if(p==NULL&&q==NULL)
+    return true;
+
+    if(p==NULL||q==NULL)
+    return false;
+
+    if(p->val!=q->val)
+    return false;
+
+    return isSameTree(p->left,q->right)&&isSameTree(p->right,q->left);
+}
+bool isSymmetric(struct TreeNode* root) 
+{
+    return isSameTree(root->left,root->right);
+}
+
+二叉树的前序遍历
+https://leetcode.cn/problems/binary-tree-preorder-traversal/
+
+int TreeSize(struct TreeNode* root)
+{
+    return root==NULL?0:1+TreeSize(root->left)+TreeSize(root->right);
+}
+void PrevOrder(struct TreeNode* root,int* arr,int* pi)
+{
+    if(root==NULL)
+    return;
+    arr[(*pi)++]=root->val;
+    PrevOrder(root->left,arr,pi);
+    PrevOrder(root->right,arr,pi);
+}
+int* preorderTraversal(struct TreeNode* root, int* returnSize)
+{
+    *returnSize=TreeSize(root);
+    int* arr=(int*)malloc(sizeof(int)*(*returnSize));
+    int i=0;//这里的i用来作为数组的下标
+    PrevOrder(root,arr,&i);
+    return arr;
+}
+
+检验是否为另一个树的子树
+https://leetcode.cn/problems/subtree-of-another-tree/
+
+bool isSameTree(struct TreeNode* p,struct TreeNode* q)
+ {
+    if(p==NULL&&q==NULL)
+    return true;
+    if(p==NULL||q==NULL||p->val!=q->val)
+    return false;
+    return isSameTree(p->left,q->left)&&isSameTree(p->right,q->right);
+ }
+bool isSubtree(struct TreeNode* root, struct TreeNode* subRoot) 
+{
+    if(root==NULL)
+    return false;
+    if(isSameTree(root,subRoot))
+    return true;
+    return isSubtree(root->left,subRoot)||isSubtree(root->right,subRoot);  
+}
+
+https://www.nowcoder.com/practice/4b91205483694f449f94c179883c1fef
+根据一个字符串，构建二叉树，并输出中序遍历的结果
+#include <stdio.h>
+#include<stdlib.h>
+typedef struct BinaryTreenode
+{
+    char data;
+    struct BinaryTreenode* left;
+    struct BinaryTreenode* right;
+}Btnode;
+Btnode* CreatTree(char* s, int* pi)
+{
+    if (s[*pi] == '#' || s[*pi] == '\0')
+    {
+        (*pi)++;
+        return NULL;
+    }
+    //abc##de#g##f###
+    Btnode* root = (Btnode*)malloc(sizeof(Btnode));
+    root->data = s[(*pi)++];
+    root->left = CreatTree(s, pi);
+    root->right = CreatTree(s, pi);
+    return root;
+}
+void InOrder(Btnode* root)
+{
+    if (root == NULL)
+        return;
+    InOrder(root->left);
+    printf("%c ", root->data);
+    InOrder(root->right);
+}
+int main()
+{
+    char s[100];
+    scanf("%s", s);
+    //先通过先序遍历的数据进行建树
+    int i = 0;
+    Btnode* root = CreatTree(s, &i);
+    InOrder(root);
+    return 0;
+}
