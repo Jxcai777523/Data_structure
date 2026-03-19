@@ -1,5 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include"BinaryTreeList.h"
+#include"Queue.h"
 //int size;
 //int TreeSize(Btnode* root)//用前序遍历
 //{
@@ -27,6 +28,58 @@ void Test01(Btnode* node1)
 	BackOrder(node1);
 	printf("\n");
 }
+//层序遍历
+//这里需要用到堆，所以我们添加一下Queue.h,以及Queue.c文件
+//就是找到对应的文件夹，将其复制到本项目的文件中
+//然后为了节约空间同时达到将树的节点放进堆的目的，我们将堆的类型修改为Btnode*
+void LevelOrder(Btnode* root)
+{
+	Que q;
+	QueInit(&q);
+	if (root != NULL)
+		Quepush(&q,root);//把树的根节点放进队列
+	while (!QueEmpty(&q))
+	{
+		Btnode* front = Quefront(&q);//取队头元素，为了后面进行访问左右节点
+		Quepop(&q);
+		printf("%d ", front->data);
+		if (front->left)
+			Quepush(&q, front->left);
+		if (front->right)
+			Quepush(&q, front->right);
+	}
+	QueDestroy(&q);
+}
+bool BinaryTreeComplete(Btnode* root)
+{
+	Que q;
+	QueInit(&q);
+	if (root)
+		Quepush(&q,root);
+	while (!QueEmpty(&q))
+	{
+		Btnode* front = Quefront(&q);
+		Quepop(&q);
+		if (front == NULL)
+		{
+			break;
+		}
+		Quepush(&q, front->left);//空节点也进队
+		Quepush(&q, front->right);
+	}
+	while (!QueEmpty(&q))
+	{
+		Btnode* front = Quefront(&q);
+		Quepop(&q);
+		if (front != NULL)
+		{
+			QueDestroy(&q);
+			return false;
+		}
+	}
+	return true;
+
+}
 int main()
 {
 	Btnode* node1 = Buynode(1);
@@ -45,6 +98,11 @@ int main()
 	printf("%d\n", TreeleafSize(node1));//4
 	printf("%d\n", TreeHight(node1));//3
 	printf("%d\n", TreeKlevelSize(node1,3));//
+	LevelOrder(node1);
+	if (BinaryTreeComplete(node1))
+		printf("YES\n");
+	else
+		printf("No\n");
 	/*TreeSize(node1);
 	printf("%d\n",size);
 	size = 0;
