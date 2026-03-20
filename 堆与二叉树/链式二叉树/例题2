@@ -1,0 +1,37 @@
+https://leetcode.cn/problems/invert-binary-tree/
+翻转二叉树
+
+typedef struct TreeNode Tnode;
+struct TreeNode* invertTree(struct TreeNode* root) 
+{
+    if(root==NULL)
+    return NULL;
+    Tnode* cyroot=(Tnode*)malloc(sizeof(Tnode));
+    cyroot->val=root->val;
+    cyroot->left=invertTree(root->right);
+    cyroot->right=invertTree(root->left);
+    return cyroot;
+}
+
+https://leetcode.cn/problems/balanced-binary-tree/
+平衡二叉树
+
+typedef struct TreeNode Tnode;
+ int TreeHight(Tnode* root)
+ {
+    if(root==NULL)
+    return 0;
+    int ret1=TreeHight(root->left);
+    int ret2=TreeHight(root->right);
+    return ret1>ret2?ret1+1:ret2+1;
+ }
+bool isBalanced(struct TreeNode* root) 
+{
+    if(root==NULL)
+    return true;
+    int h1=TreeHight(root->left);
+    int h2=TreeHight(root->right);
+    if(abs(h1-h2)>1)
+    return false;
+    return isBalanced(root->left)&&isBalanced(root->right);
+}
