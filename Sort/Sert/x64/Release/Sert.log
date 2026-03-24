@@ -1,0 +1,9 @@
+﻿  Sert.c
+  test.c
+D:\C语言project\数据结构\Sert\test.c(12,8): warning C4244: “函数”: 从“time_t”转换到“unsigned int”，可能丢失数据
+  正在生成代码
+  6 of 12 functions (50.0%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  已完成代码的生成
+  Sert.vcxproj -> D:\C语言project\数据结构\Sert\x64\Release\Sert.exe
