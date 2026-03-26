@@ -49,14 +49,6 @@ void Swap(int* n1, int* n2)
 	*n1 = *n2;
 	*n2 = tmp;
 }
-void BuildHeap(int* arr,int  n)
-{
-
-	for (int i = (n - 1 - 1) / 2;i >= 0;i--)
-	{
-		AdjustDown(arr, n, i);
-	}
-}
 void AdjustDown(int* arr, int size, int parent)
 {
 	//因为我们要找出左右孩子中较小的那一个进行交换
@@ -78,6 +70,14 @@ void AdjustDown(int* arr, int size, int parent)
 		{
 			break;
 		}
+	}
+}
+void BuildHeap(int* arr, int  n)
+{
+
+	for (int i = (n - 1 - 1) / 2;i >= 0;i--)
+	{
+		AdjustDown(arr, n, i);
 	}
 }
 void HeapSort(int* arr,int n)//堆排序
@@ -375,11 +375,32 @@ void _MergeSort(int* arr, int* tmp, int left, int right)
 	int mid = (left + right) / 2;
 	//递归进行分割
 	//分割的区间为[left,mid],[mid+1,right]
+	//这里分割有也讲究，否则会陷入死循环
 	_MergeSort(arr, tmp, left, mid);
 	_MergeSort(arr, tmp, mid + 1, right);
 	int begin1 = left, end1 = mid;
 	int begin2 = mid + 1, end2 = right;
-
+	int i = left;
+	while (begin1 <= end1 && begin2 <= end2)
+	{
+		if (arr[begin1] < arr[begin2])
+		{
+			tmp[i++] = arr[begin1++];
+		}
+		else
+		{
+			tmp[i++] = arr[begin2++];
+		}
+	}
+	while (begin1 <= end1)
+	{
+		tmp[i++]= arr[begin1++];
+	}
+	while (begin2 <= end2)
+	{
+		tmp[i++] = arr[begin2++];
+	}
+	memcpy(arr+left,tmp+left,(right - left + 1) * sizeof(int));
 }
 void MergeSort(int* arr,int n)
 {
@@ -392,5 +413,82 @@ void MergeSort(int* arr,int n)
 	_MergeSort(arr, tmp, 0, n - 1);
 
 	free(tmp);
-	tmp == NULL;
+	tmp = NULL;
+}
+void MergeSortNonR(int* arr, int n)
+{
+	int* tmp = (int*)malloc(sizeof(int) * n);
+	if (tmp == NULL)
+	{
+		perror("malloc failed");
+		return;
+	}
+	int gap= 1;
+	while (gap < n)
+	{
+		for (int i = 0;i < n;i += 2 * gap)
+		{
+			int begin1 = i, end1 = i + gap - 1;
+			int begin2 = i + gap, end2 = i + 2 * gap - 1;
+			if (begin2 >= n)//这里说明整个第二区间都越界了，那么就不需要合并了
+			{
+				break;
+			}
+			if (end2 >= n)
+			{
+				end2 = n - 1;
+			}
+			int j=begin1;
+			while (begin1 <= end1 && begin2 <= end2)
+			{
+				if (arr[begin1] < arr[begin2])
+				{
+					tmp[j++] = arr[begin1++];
+				}
+				else
+				{
+					tmp[j++] = arr[begin2++];
+				}
+			}
+			while (begin1 <= end1)
+			{
+				tmp[j++] = arr[begin1++];
+			}
+			while (begin2 <= end2)
+			{
+				tmp[j++] = arr[begin2++];
+			}
+			memcpy(arr + i, tmp + i, (end2-i + 1) * sizeof(int));
+		}
+		gap *= 2;
+	}
+	free(tmp);
+	tmp = NULL;
+}
+void CountSort(int* arr, int n)
+{
+	int min = arr[0], max = arr[0];
+	for (int i = 0;i < n;i++)
+	{
+		if (min > arr[i])
+			min = arr[i];
+		if (max < arr[i])
+			max = arr[i];
+	}
+	int range = max - min + 1;
+	int* count = (int*)calloc(range, sizeof(int));
+	for (int i = 0;i < n;i++)//把arr中出现的数字进行计数，数字与下标的差值为min
+	{
+		count[arr[i] - min]++;//映射
+	}
+	int j = 0;
+	for (int i = 0;i < range;i++)
+	{
+		while(count[i]--)
+		{
+			arr[j++] = i + min;
+		}
+	}
+	free(count);
+	count = NULL;
 }

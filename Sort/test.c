@@ -10,7 +10,7 @@ void PrintArr(int* arr, int n)
 void Testspeed()
 {
 	srand(time(NULL));//先生成一个随机种子
-	const int N = 1000000;
+	const int N = 100000;
 	int* a1 = (int*)malloc(sizeof(int) * N);
 	int* a2 = (int*)malloc(sizeof(int) * N);
 	int* a3 = (int*)malloc(sizeof(int) * N);
@@ -23,10 +23,10 @@ void Testspeed()
 		a1[i] = rand();
 		a2[i] = a3[i] = a4[i] = a5[i] = a6[i] = a7[i] = a1[i];
 	}
-	int begin1 = clock();
+	/*int begin1 = clock();
 	BubbleSort(a1, N);
 	int end1 = clock();
-	printf("BubbleSort:%d\n", end1 - begin1);
+	printf("BubbleSort:%d\n", end1 - begin1);*/
 
 	int begin2 = clock();
 	InsertSort(a1, N);
@@ -42,16 +42,28 @@ void Testspeed()
 	ShellSort(a1, N);
 	int end4 = clock();
 	printf("ShellSort: %d\n", end4 - begin4);
+
+	int begin5 = clock();
+	QuickSort(a1, 0,N-1);
+	int end5 = clock();
+	printf("QuickSort: %d\n", end5 - begin5);
+
+	int begin6 = clock();
+	SelectSort(a1, N - 1);
+	int end6 = clock();
+	printf("SelectSort: %d\n", end6 - begin6);
 }
+
+
 int main()
 {
-	int arr[] = { 87,4,43,6,7,46,46,35,35 };
+	int arr[] = { 87,4,43,6,7,46,46,35 };
 	//BubbleSort(arr, 9);
 	//InsertSort(arr, 9);
 	/*SelectSort(arr, 9);*/
-	QuickSortNonR(arr, 0, 8);
+	/*CountSort(arr,8);*/
 	/*ShellSort(arr, 9);*/
-	PrintArr(arr,9);
-	//Testspeed();
+	/*PrintArr(arr,8);*/
+	Testspeed();
 	return 0;
 }
