@@ -45,10 +45,11 @@ void Testspeed()
 }
 int main()
 {
-	int arr[] = { 9,8,7,6,5,4,3,2,1 };
+	int arr[] = { 87,4,43,6,7,46,46,35,35 };
 	//BubbleSort(arr, 9);
 	//InsertSort(arr, 9);
-	SelectSort(arr, 9);
+	/*SelectSort(arr, 9);*/
+	QuickSortNonR(arr, 0, 8);
 	/*ShellSort(arr, 9);*/
 	PrintArr(arr,9);
 	//Testspeed();
